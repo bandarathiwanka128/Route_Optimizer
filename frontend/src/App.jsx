@@ -6,8 +6,7 @@ import apiService from './services/apiService';
 import './App.css';
 
 const App = () => {
-  const [route,        setRoute]        = useState([]);   // array of stops
-  const [origin,       setOrigin]       = useState(null);
+  const [route,        setRoute]        = useState([]);
   const [summary,      setSummary]      = useState(null);
   const [loading,      setLoading]      = useState(true);
   const [error,        setError]        = useState(null);
@@ -20,7 +19,6 @@ const App = () => {
       try {
         const data = await apiService.getOptimizedRoute();
         setRoute(data.route ?? []);
-        setOrigin(data.origin ?? null);
         setSummary({
           totalJobs:       data.totalJobs,
           totalStops:      data.totalStops,
