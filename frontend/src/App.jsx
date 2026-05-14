@@ -49,7 +49,6 @@ const App = () => {
 
   const totalJobs      = route.reduce((sum, s) => sum + (s.jobs?.length ?? 1), 0);
   const completedCount = completedIds.size;
-  const pendingStops   = route.filter((s) => s.jobs?.some((j) => !completedIds.has(j.id)));
 
   return (
     <div className="app">
