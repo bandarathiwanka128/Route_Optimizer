@@ -76,39 +76,113 @@ body {
 
 .header-divider {
   width: 1px;
-  height: 34px;
+  height: 40px;
   background: #E8E2DC;
   flex-shrink: 0;
 }
 
-.subtitle { font-size: 0.77rem; color: #6A6A6A; line-height: 1.4; }
-
-.summary-bar {
-  background: #F16D34;
-  padding: 7px 24px;
+/* ─── Dispatch info + targets (fills the free header space) ── */
+.header-dispatch {
   display: flex;
   align-items: center;
-  gap: 0;
-  flex-wrap: wrap;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: #FFFFFF;
+  justify-content: space-between;
+  flex: 1;
+  gap: 20px;
+  min-width: 0;
 }
 
-.summary-bar span { padding: 0 16px 0 0; }
-.summary-bar span + span {
-  padding-left: 16px;
-  border-left: 1px solid rgba(255,255,255,0.3);
+.dispatch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
+
+.dispatch-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #161E54;
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+.dispatch-sub {
+  font-size: 0.78rem;
+  color: #7A8A9A;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ─── Today's Targets ────────────────────────────── */
+.header-targets {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.targets-label {
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #9AAABB;
+}
+
+.target-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.target-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #F4F6FB;
+  border: 1px solid #E0E4F0;
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+.target-chip.accent {
+  background: #FEF0E8;
+  border-color: #F0D8CC;
+}
+
+.chip-icon { font-size: 1rem; line-height: 1; }
+
+.chip-body {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.chip-val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #161E54;
+}
+
+.chip-lbl {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #9AAABB;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.target-chip.accent .chip-val { color: #C8501A; }
 
 .source-badge {
-  margin-left: 8px;
-  background: rgba(22,30,84,0.3);
-  padding: 1px 10px;
+  background: #FEF0E8;
+  color: #C8501A;
+  padding: 3px 10px;
   border-radius: 8px;
   font-size: 0.67rem;
   letter-spacing: 0.5px;
   font-weight: 700;
+  border: 1px solid #F0D8CC;
 }
 
 /* ─── Main grid ─────────────────────────────────── */
@@ -117,7 +191,7 @@ body {
   grid-template-columns: 390px 1fr;
   flex: 1;
   overflow: hidden;
-  height: calc(100vh - 92px);
+  height: calc(100vh - 78px);
 }
 
 @media (max-width: 860px) {

@@ -74,18 +74,56 @@ const App = () => {
             </div>
           </div>
           <div className="header-divider" />
-          <p className="subtitle">
-            Field Technician Dispatch &mdash; Starting from Head Office, Horana
-          </p>
-        </div>
-        {!loading && summary && (
-          <div className="summary-bar">
-            <span>{pendingStops.length} stops pending</span>
-            <span>{completedCount} / {totalJobs} jobs completed</span>
-            <span>{summary.totalDistanceKm} km estimated</span>
-            {summary.source === 'fallback' && <span className="source-badge">Demo data</span>}
+
+          <div className="header-dispatch">
+            <div className="dispatch-info">
+              <span className="dispatch-title">Field Technician Dispatch</span>
+              <span className="dispatch-sub">
+                &#128205; Head Office, Horana &nbsp;&mdash;&nbsp;
+                {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
+            </div>
+
+            {!loading && summary && (
+              <div className="header-targets">
+                <span className="targets-label">Today&rsquo;s Targets</span>
+                <div className="target-chips">
+                  <div className="target-chip">
+                    <span className="chip-icon">&#128205;</span>
+                    <div className="chip-body">
+                      <span className="chip-val">{route.length}</span>
+                      <span className="chip-lbl">Stops</span>
+                    </div>
+                  </div>
+                  <div className="target-chip">
+                    <span className="chip-icon">&#128203;</span>
+                    <div className="chip-body">
+                      <span className="chip-val">{totalJobs}</span>
+                      <span className="chip-lbl">Jobs</span>
+                    </div>
+                  </div>
+                  <div className="target-chip">
+                    <span className="chip-icon">&#128663;</span>
+                    <div className="chip-body">
+                      <span className="chip-val">{summary.totalDistanceKm}</span>
+                      <span className="chip-lbl">km route</span>
+                    </div>
+                  </div>
+                  <div className="target-chip accent">
+                    <span className="chip-icon">&#9989;</span>
+                    <div className="chip-body">
+                      <span className="chip-val">{completedCount}/{totalJobs}</span>
+                      <span className="chip-lbl">Done</span>
+                    </div>
+                  </div>
+                  {summary.source === 'fallback' && (
+                    <span className="source-badge">Demo data</span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </header>
 
       <main className="app-main">
