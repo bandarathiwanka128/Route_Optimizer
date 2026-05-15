@@ -214,13 +214,20 @@ const MapView = ({ route, loading, error, completedIds, focusedStopId, onLegInfo
       if (mapRef.current) mapRef.current.setCenter(HORANA_ORIGIN);
       return;
     }
+
+    // Start from the last completed stop's location, or Horana if none done yet
+    const firstPendingIdx = route.findIndex((s) => s.stopId === pendingStops[0].stopId);
+    const origin = firstPendingIdx > 0
+      ? { lat: route[firstPendingIdx - 1].geo_lat, lng: route[firstPendingIdx - 1].geo_lng }
+      : HORANA_ORIGIN;
+
     const destination = { lat: pendingStops.at(-1).geo_lat, lng: pendingStops.at(-1).geo_lng };
     const waypoints   = pendingStops.slice(0, -1).map((s) => ({
       location: new window.google.maps.LatLng(s.geo_lat, s.geo_lng),
       stopover: true,
     }));
     dirSvcRef.current.route(
-      { origin: HORANA_ORIGIN, destination, waypoints,
+      { origin, destination, waypoints,
         optimizeWaypoints: false,
         travelMode: window.google.maps.TravelMode.DRIVING,
         region: 'lk' },
@@ -230,7 +237,7 @@ const MapView = ({ route, loading, error, completedIds, focusedStopId, onLegInfo
           setDirError(null);
           if (mapRef.current) {
             const bounds = new window.google.maps.LatLngBounds();
-            bounds.extend(HORANA_ORIGIN);
+            bounds.extend(origin);
             result.routes[0].legs.forEach((l) => {
               bounds.extend(l.start_location);
               bounds.extend(l.end_location);
@@ -253,7 +260,7 @@ const MapView = ({ route, loading, error, completedIds, focusedStopId, onLegInfo
         }
       }
     );
-  }, [onLegInfoUpdate]);
+  }, [onLegInfoUpdate, route]);
 
   const onMapLoad = useCallback((map) => {
     mapRef.current    = map;
