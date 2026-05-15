@@ -121,10 +121,12 @@ const RouteSummaryPanel = ({ route, legs, completedIds }) => {
 const MapView = ({ route, loading, error, completedIds, focusedStopId, onLegInfoUpdate, onMarkerClick }) => {
   const { isLoaded, loadError } = useJsApiLoader({ googleMapsApiKey: MAPS_API_KEY });
 
-  const [directions, setDirections] = useState(null);
-  const [dirError,   setDirError]   = useState(null);
-  const [mapReady,   setMapReady]   = useState(false);
-  const [legs,       setLegs]       = useState([]);
+  const [directions,       setDirections]       = useState(null);
+  const [returnDirections, setReturnDirections] = useState(null);
+  const [returnLeg,        setReturnLeg]        = useState(null);
+  const [dirError,         setDirError]         = useState(null);
+  const [mapReady,         setMapReady]         = useState(false);
+  const [legs,             setLegs]             = useState([]);
 
   const mapRef     = useRef(null);
   const dirSvcRef  = useRef(null);
@@ -211,9 +213,43 @@ const MapView = ({ route, loading, error, completedIds, focusedStopId, onLegInfo
       setDirections(null);
       setLegs([]);
       onLegInfoUpdate([]);
-      if (mapRef.current) mapRef.current.setCenter(HORANA_ORIGIN);
+
+      // All stops done — show shortest return route to Head Office in cyan
+      if (route.length > 0) {
+        const lastStop = route.at(-1);
+        dirSvcRef.current.route(
+          { origin: { lat: lastStop.geo_lat, lng: lastStop.geo_lng },
+            destination: HORANA_ORIGIN,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+            region: 'lk' },
+          (result, status) => {
+            if (status === window.google.maps.DirectionsStatus.OK) {
+              setReturnDirections(result);
+              const leg = result.routes[0].legs[0];
+              setReturnLeg({ distance: leg.distance.text, duration: leg.duration.text });
+              if (mapRef.current) {
+                const bounds = new window.google.maps.LatLngBounds();
+                result.routes[0].legs.forEach((l) => {
+                  bounds.extend(l.start_location);
+                  bounds.extend(l.end_location);
+                });
+                bounds.extend(HORANA_ORIGIN);
+                mapRef.current.fitBounds(bounds, 80);
+              }
+            }
+          }
+        );
+      } else {
+        setReturnDirections(null);
+        setReturnLeg(null);
+        if (mapRef.current) mapRef.current.setCenter(HORANA_ORIGIN);
+      }
       return;
     }
+
+    // Still have pending stops — clear any return route
+    setReturnDirections(null);
+    setReturnLeg(null);
 
     // Start from the last completed stop's location, or Horana if none done yet
     const firstPendingIdx = route.findIndex((s) => s.stopId === pendingStops[0].stopId);
@@ -313,7 +349,25 @@ const MapView = ({ route, loading, error, completedIds, focusedStopId, onLegInfo
               }}
             />
           )}
+          {returnDirections && (
+            <DirectionsRenderer
+              directions={returnDirections}
+              options={{
+                suppressMarkers: true,
+                polylineOptions: { strokeColor: '#53cbf3', strokeWeight: 5, strokeOpacity: 0.9 },
+              }}
+            />
+          )}
         </GoogleMap>
+
+        {returnLeg && (
+          <div className="return-banner">
+            <span className="return-banner-icon">&#127968;</span>
+            <span className="return-banner-text">Return to Head Office</span>
+            <span className="return-banner-chip">&#128663; {returnLeg.distance}</span>
+            <span className="return-banner-chip">&#9203; {returnLeg.duration}</span>
+          </div>
+        )}
 
         {dirError && (
           <div className="dir-error-banner">

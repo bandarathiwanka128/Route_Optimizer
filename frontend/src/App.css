@@ -506,6 +506,42 @@ body {
 
 .map-placeholder.error { color: #C8501A; background: #FFF4EE; }
 
+/* ─── Return to base banner ───────────────────────── */
+.return-banner {
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 22, 64, 0.92);
+  border: 2px solid #53cbf3;
+  border-radius: 30px;
+  padding: 9px 20px;
+  box-shadow: 0 4px 20px rgba(83,203,243,0.35);
+  white-space: nowrap;
+  z-index: 10;
+  backdrop-filter: blur(6px);
+}
+
+.return-banner-icon { font-size: 1.1rem; line-height: 1; }
+
+.return-banner-text {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #53cbf3;
+  letter-spacing: 0.3px;
+}
+
+.return-banner-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: rgba(83,203,243,0.18);
+  border: 1px solid rgba(83,203,243,0.35);
+  border-radius: 12px;
+  padding: 3px 10px;
+}
+
 .dir-error-banner {
   position: absolute;
   bottom: 0; left: 0; right: 0;
